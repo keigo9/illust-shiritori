@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shiritori-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apps
+  template:
+    metadata:
+      labels:
+        app: apps
+    spec:
+      containers:
+        - name: apps
+          image: keigo9/shiritori
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shiritori-srv
+spec:
+  selector:
+    app: apps
+  ports:
+    - name: apps
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
