@@ -22,7 +22,7 @@
     <input type="button" id="clear" value="消去" />
   </div>
 
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
   <script src="../socket.io/socket.io.js"></script>
   <script type="text/javascript">
     $(function () {
@@ -31,7 +31,7 @@
       var fromY;
       var drawFlag = false;
       var context = $("canvas").get(0).getContext('2d');
-      var socket = io.connect('http://localhost');
+      var socket = io.connect('https://shiritori.dev/');
 
       // サーバからメッセージ受信
       socket.on('send user', function (msg) {

@@ -3,7 +3,7 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://shiritori.dev/",
     methods: ["GET", "POST"]
   }
 });
@@ -16,6 +16,7 @@ app.get('/', function (req, res) {
 });
 
 io.sockets.on('connection', function (socket) {
+  console.log('coneccted.')
 
   // クライアントからメッセージ受信
   socket.on('clear send', function () {
