@@ -8,23 +8,39 @@
 </head>
 
 <body>
-  <canvas width="500" height="400"></canvas>
-  <ul>
-    <li style="background-color:#000"></li>
-    <li style="background-color:#f00"></li>
-    <li style="background-color:#0f0"></li>
-    <li style="background-color:#00f"></li>
-    <li style="background-color:#ff0"></li>
-    <li style="background-color:#fff"></li>
-  </ul>
-  <div id="button">
-    <input type="button" id="save" value="保存" />
-    <input type="button" id="clear" value="消去" />
+  <div class="wrapper">
+    <canvas></canvas>
+    <ul>
+      <li style="background-color:#000"></li>
+      <li style="background-color:#f00"></li>
+      <li style="background-color:#0f0"></li>
+      <li style="background-color:#00f"></li>
+      <li style="background-color:#ff0"></li>
+      <li style="background-color:#fff"></li>
+    </ul>
+    <div id="button">
+      <input type="button" id="save" value="保存" />
+      <input type="button" id="clear" value="消去" />
+    </div>
+    <div class="bold">
+      <!-- <input type="radio" class="size" name='size' value="1" checked='checked'>small
+    <input type="radio" class="size" name='size' value="5">meddum
+    <input type="radio" class="size" name='size' value="10">large -->
+      <input type="range" value="5" min="1" max="30" step="1"
+        oninput="document.getElementById('output1').value=this.value" id="size">
+
+      <output id="output1">5</output>
+    </div>
   </div>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
   <script src="../socket.io/socket.io.js"></script>
   <script type="text/javascript">
+    var w = $('.wrapper').width();
+    var h = $('.wrapper').height();
+    $('canvas').attr('width', w);
+    $('canvas').attr('height', h);
+
     $(function () {
       var offset = 5;
       var fromX;
@@ -36,7 +52,7 @@
       // サーバからメッセージ受信
       socket.on('send user', function (msg) {
         context.strokeStyle = msg.color;
-        context.lineWidth = 2;
+        context.lineWidth = msg.Number;
         context.beginPath();
         context.moveTo(msg.fx, msg.fy);
         context.lineTo(msg.tx, msg.ty);
@@ -52,6 +68,8 @@
         drawFlag = true;
         fromX = e.pageX - $(this).offset().left - offset;
         fromY = e.pageY - $(this).offset().top - offset;
+        context.beginPath();
+        context.moveTo(fromX, fromY);
         return false;  // for chrome
       });
 
@@ -63,14 +81,21 @@
 
       $('canvas').on('mouseup', function () {
         drawFlag = false;
+        context.closePath();
       });
 
       $('canvas').on('mouseleave', function () {
         drawFlag = false;
+        context.closePath();
       });
 
       $('li').click(function () {
         context.strokeStyle = $(this).css('background-color');
+      });
+
+      $('#size').click(function () {
+        console.log(Number($(this).val()));
+        context.lineWidth = Number($(this).val());
       });
 
       $('#clear').click(function (e) {
@@ -82,15 +107,15 @@
       function draw(e) {
         var toX = e.pageX - $('canvas').offset().left - offset;
         var toY = e.pageY - $('canvas').offset().top - offset;
-        context.lineWidth = 2;
-        context.beginPath();
-        context.moveTo(fromX, fromY);
+        // context.lineWidth = 2;
+        // context.beginPath();
+        // context.moveTo(fromX, fromY);
         context.lineTo(toX, toY);
         context.stroke();
-        context.closePath();
+        // context.closePath();
 
         // サーバへメッセージ送信
-        socket.emit('server send', { fx: fromX, fy: fromY, tx: toX, ty: toY, color: context.strokeStyle });
+        socket.emit('server send', { fx: fromX, fy: fromY, tx: toX, ty: toY, color: context.strokeStyle, Number: context.lineWidth });
         fromX = toX;
         fromY = toY;
       }
