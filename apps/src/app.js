@@ -20,15 +20,23 @@ io.sockets.on('connection', function (socket) {
 
   // クライアントからメッセージ受信
   socket.on('clear send', function () {
-
     // 自分以外の全員に送る
     socket.broadcast.emit('clear user');
   });
 
-  // クライアントからメッセージ受信
-  socket.on('server send', function (msg) {
+  socket.on('prev send', function () {
+    socket.broadcast.emit('prev user');
+  });
 
-    // 自分以外の全員に送る
+  socket.on('next send', function () {
+    socket.broadcast.emit('next user');
+  });
+
+  socket.on('mousedown send', function (msg) {
+    socket.broadcast.emit('mousedown user', msg);
+  });
+
+  socket.on('server send', function (msg) {
     socket.broadcast.emit('send user', msg);
   });
 
