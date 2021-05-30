@@ -59,14 +59,24 @@ li {
   left: 20px;
 }
 
-#imageList,
+#imageListTitle,
 iframe {
   margin-top: 160px;
   width: 100%;
 }
 
-#imageList li {
-  width: 33%;
-  margin: 10px 0px;
+#imageListTitle li {
+  display: inline;
+  border: none;
+}
+
+#imageListTitle li:after,
+#imageListPicture img:after {
+  content: '→';
+}
+
+#imageListPicture img {
+  width: 30%;
+  margin: 10px 10px;
   border: none;
 }

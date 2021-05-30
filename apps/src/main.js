@@ -16,8 +16,9 @@ $(function () {
   let undoDataStack = [];
   let redoDataStack = [];
   // imageList
-  let imageList;
-  let imageLists = [];
+  let imageTitle;
+  let imageTitles = [];
+  let imagePictures = [];
 
   // サーバからメッセージ受信
   socket.on('send user', function (msg) {
@@ -161,49 +162,66 @@ $(function () {
     window.open(d, "save");
   });
 
-  // $("#send-btn").click(function () {
-  //   $('form').submit();
-  //   $('form')[0].reset();
-  //   return false;
-  // });
+  function sendImagePicture() {
+    var d = $("canvas")[0].toDataURL("image/png");
+    imagePictures.push(d);
+    context.clearRect(0, 0, $('canvas').width(), $('canvas').height());
+    // pushした配列が毎回レンダーされるので、そのたびに空にする。
+    $('#imageListPicture').empty();
+    $.each(imagePictures,
+      function (index, elem) {
+        $('<img>')
+          .attr("src", elem)
+          .appendTo("#imageListPicture");
+      }
+    );
+  };
+
+  function sendImageTitle(data) {
+    //　入力欄をリセット
+    $('form')[0].reset();
+    //  取得したデーターを変数に入れる
+    $.each(data, function (key, value) {
+      imageTitle = value;
+    });
+    // 配列にpushする
+    imageTitles.push(imageTitle);
+    // console.log(imageTitles);
+    // pushした配列が毎回レンダーされるので、そのたびに空にする。
+    $('#imageListTitle').empty();
+    $.each(imageTitles,
+      function (index, elem) {
+        // if (elem.title >= 40) { return false; }
+        $('<li></li>')
+          .append(elem.title)
+          .appendTo('#imageListTitle');
+      }
+    );
+  };
+
   $("#send-btn").click(function () {
-    $.ajax({
-      url: "https://shiritori.dev/posts/create",
-      type: "POST",
-      data: $('form').serialize(),
-      dataType: "json",
-      timespan: 1000
-    }).done(function (data) {
-      //　入力欄をリセット
-      $('form')[0].reset();
-      //  取得したデーターを変数に入れる
-      $.each(data, function (key, value) {
-        imageList = value;
-      });
-      // 配列にpushする
-      imageLists.push(imageList);
-      console.log(imageLists);
-      // pushした配列が毎回レンダーされるので、そのたびに空にする。
-      $('#imageList').empty();
-      $.each(imageLists,
-        function (index, elem) {
-          // if (elem.title >= 40) { return false; }
-          $('<li></li>')
-            .append(elem.title)
-            .appendTo('#imageList');
-        }
-      );
+    // form空文字リターン
+    if ($('#shiritori').val() == "") {
+      alert("絵の名前を書いてください");
+      return false;
+    } else {
+      $.ajax({
+        url: "https://shiritori.dev/posts/create",
+        type: "POST",
+        data: $('form').serialize(),
+        dataType: "json",
+        timespan: 1000
+      }).done(function (data) {
+        sendImageTitle(data);
+        sendImagePicture()
 
-      // var data2 = JSON.stringify(data);
-      // var data3 = JSON.parse(data2);
-      // console.log(data3);
-
-      // 6. failは、通信に失敗した時に実行される
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-      // $("#span1").text(jqXHR.status); //例：404
-      // $("#span2").text(textStatus); //例：error
-      // $("#span3").text(errorThrown); //例：NOT FOUND
-      console.log(errorThrown)
-    })
+        // 6. failは、通信に失敗した時に実行される
+      }).fail(function (jqXHR, textStatus, errorThrown) {
+        // $("#span1").text(jqXHR.status); //例：404
+        // $("#span2").text(textStatus); //例：error
+        // $("#span3").text(errorThrown); //例：NOT FOUND
+        console.log(errorThrown)
+      })
+    }
   });
 });
