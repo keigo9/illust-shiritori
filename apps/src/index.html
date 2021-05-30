@@ -12,12 +12,12 @@
     <form action="/posts/create" method="POST" target="sendPosts">
       <canvas></canvas>
       <ul>
-        <li style="background-color:#000"></li>
-        <li style="background-color:#f00"></li>
-        <li style="background-color:#0f0"></li>
-        <li style="background-color:#00f"></li>
-        <li style="background-color:#ff0"></li>
-        <li style="background-color:#fff"></li>
+        <li style="background-color:#000" class="color"></li>
+        <li style="background-color:#f00" class="color"></li>
+        <li style="background-color:#0f0" class="color"></li>
+        <li style="background-color:#00f" class="color"></li>
+        <li style="background-color:#ff0" class="color"></li>
+        <li style="background-color:#fff" class="color"></li>
       </ul>
       <div id="button">
         <input type="button" id="save" value="保存" />
@@ -36,7 +36,9 @@
     </form>
   </div>
 
-  <iframe name="sendPosts" id="shiritori-history"></iframe>
+  <!-- <iframe name="sendPosts" id="shiritori-history"></iframe> -->
+  <div id='imageList'>
+  </div>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
   <script src="../socket.io/socket.io.js"></script>

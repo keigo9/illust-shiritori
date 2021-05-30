@@ -22,7 +22,6 @@ app.get('/', function (req, res) {
 
 app.post('/posts/create', (req, res) => {
   const id = randomBytes(4).toString('hex');
-  // console.log(req.body.shiritori);
   const title = req.body.shiritori;
   posts[id] = {
     id,

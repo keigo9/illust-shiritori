@@ -15,6 +15,9 @@ $(function () {
   // スタックデータ保存用の配列
   let undoDataStack = [];
   let redoDataStack = [];
+  // imageList
+  let imageList;
+  let imageLists = [];
 
   // サーバからメッセージ受信
   socket.on('send user', function (msg) {
@@ -86,7 +89,7 @@ $(function () {
     context.closePath();
   });
 
-  $('li').click(function () {
+  $('.color').click(function () {
     context.strokeStyle = $(this).css('background-color');
   });
 
@@ -158,9 +161,49 @@ $(function () {
     window.open(d, "save");
   });
 
+  // $("#send-btn").click(function () {
+  //   $('form').submit();
+  //   $('form')[0].reset();
+  //   return false;
+  // });
   $("#send-btn").click(function () {
-    $('form').submit();
-    $('form')[0].reset();
-    return false;
-  })
+    $.ajax({
+      url: "https://shiritori.dev/posts/create",
+      type: "POST",
+      data: $('form').serialize(),
+      dataType: "json",
+      timespan: 1000
+    }).done(function (data) {
+      //　入力欄をリセット
+      $('form')[0].reset();
+      //  取得したデーターを変数に入れる
+      $.each(data, function (key, value) {
+        imageList = value;
+      });
+      // 配列にpushする
+      imageLists.push(imageList);
+      console.log(imageLists);
+      // pushした配列が毎回レンダーされるので、そのたびに空にする。
+      $('#imageList').empty();
+      $.each(imageLists,
+        function (index, elem) {
+          // if (elem.title >= 40) { return false; }
+          $('<li></li>')
+            .append(elem.title)
+            .appendTo('#imageList');
+        }
+      );
+
+      // var data2 = JSON.stringify(data);
+      // var data3 = JSON.parse(data2);
+      // console.log(data3);
+
+      // 6. failは、通信に失敗した時に実行される
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      // $("#span1").text(jqXHR.status); //例：404
+      // $("#span2").text(textStatus); //例：error
+      // $("#span3").text(errorThrown); //例：NOT FOUND
+      console.log(errorThrown)
+    })
+  });
 });

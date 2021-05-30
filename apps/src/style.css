@@ -59,8 +59,14 @@ li {
   left: 20px;
 }
 
+#imageList,
 iframe {
   margin-top: 160px;
   width: 100%;
 }
-/*# sourceMappingURL=style.css.map */
+
+#imageList li {
+  width: 33%;
+  margin: 10px 0px;
+  border: none;
+}
