@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
+const { randomBytes } = require('crypto');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
   cors: {
@@ -10,9 +12,25 @@ const io = require('socket.io')(server, {
 const port = 3000;
 
 app.use(express.static('src'));
+app.use(bodyParser());
+
+const posts = {};
 
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
+});
+
+app.post('/posts/create', (req, res) => {
+  const id = randomBytes(4).toString('hex');
+  // console.log(req.body.shiritori);
+  const title = req.body.shiritori;
+  posts[id] = {
+    id,
+    title
+  }
+  console.log(posts[id]);
+
+  res.status(201).send(posts);
 });
 
 io.sockets.on('connection', function (socket) {

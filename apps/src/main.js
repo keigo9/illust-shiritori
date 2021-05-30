@@ -157,4 +157,10 @@ $(function () {
     d = d.replace("image/png", "image/octet-stream");
     window.open(d, "save");
   });
+
+  $("#send-btn").click(function () {
+    $('form').submit();
+    $('form')[0].reset();
+    return false;
+  })
 });

@@ -50,5 +50,17 @@ li {
 .bold {
   position: relative;
   top: -40px;
+  display: inline-block;
+}
+
+.text-form {
+  position: relative;
+  top: -40px;
+  left: 20px;
+}
+
+iframe {
+  margin-top: 160px;
+  width: 100%;
 }
 /*# sourceMappingURL=style.css.map */
