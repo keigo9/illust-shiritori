@@ -63,6 +63,36 @@ $(function () {
     context.clearRect(0, 0, $('canvas').width(), $('canvas').height());
   });
 
+  socket.on('sendImagePicture user', function () {
+    var d = $("canvas")[0].toDataURL("image/png");
+    imagePictures.push(d);
+    context.clearRect(0, 0, $('canvas').width(), $('canvas').height());
+    // pushした配列が毎回レンダーされるので、そのたびに空にする。
+    $('#imageListPicture').empty();
+    $.each(imagePictures,
+      function (index, elem) {
+        $('<img>')
+          .attr("src", elem)
+          .appendTo("#imageListPicture");
+      }
+    );
+  })
+
+  socket.on('sendImageTitle user', function (msg) {
+    // 配列にpushする
+    imageTitles.push(msg);
+    // pushした配列が毎回レンダーされるので、そのたびに空にする。
+    $('#imageListTitle').empty();
+    $.each(imageTitles,
+      function (index, elem) {
+        // if (elem.title >= 40) { return false; }
+        $('<li></li>')
+          .append(elem.imageTitle.title)
+          .appendTo('#imageListTitle');
+      }
+    );
+  });
+
   $('canvas').mousedown(function (e) {
     drawFlag = true;
     beforeDraw();
@@ -163,6 +193,7 @@ $(function () {
   });
 
   function sendImagePicture() {
+    socket.emit('sendImagePicture send');
     var d = $("canvas")[0].toDataURL("image/png");
     imagePictures.push(d);
     context.clearRect(0, 0, $('canvas').width(), $('canvas').height());
@@ -184,6 +215,8 @@ $(function () {
     $.each(data, function (key, value) {
       imageTitle = value;
     });
+    // サーバへ送信
+    socket.emit('sendImageTitle send', { imageTitle });
     // 配列にpushする
     imageTitles.push(imageTitle);
     // console.log(imageTitles);

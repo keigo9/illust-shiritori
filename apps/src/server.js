@@ -53,6 +53,14 @@ io.sockets.on('connection', function (socket) {
     socket.broadcast.emit('mousedown user', msg);
   });
 
+  socket.on('sendImagePicture send', function () {
+    socket.broadcast.emit('sendImagePicture user');
+  });
+
+  socket.on('sendImageTitle send', function (msg) {
+    socket.broadcast.emit('sendImageTitle user', msg);
+  })
+
   socket.on('server send', function (msg) {
     socket.broadcast.emit('send user', msg);
   });
