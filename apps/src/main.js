@@ -19,6 +19,8 @@ $(function () {
   let imageTitle;
   let imageTitles = [];
   let imagePictures = [];
+  // ひらがな判定正規表現
+  var regexp = /^[\u{3000}-\u{301C}\u{3041}-\u{3093}\u{309B}-\u{309E}]+$/mu;
 
   // サーバからメッセージ受信
   socket.on('send user', function (msg) {
@@ -219,23 +221,43 @@ $(function () {
     socket.emit('sendImageTitle send', { imageTitle });
     // 配列にpushする
     imageTitles.push(imageTitle);
-    // console.log(imageTitles);
+
     // pushした配列が毎回レンダーされるので、そのたびに空にする。
     $('#imageListTitle').empty();
     $.each(imageTitles,
       function (index, elem) {
-        // if (elem.title >= 40) { return false; }
         $('<li></li>')
           .append(elem.title)
           .appendTo('#imageListTitle');
       }
     );
+
+    isShiritori(imageTitles);
   };
 
+  function isShiritori(imageTitles) {
+    var prevLastLetter = imageTitles[imageTitles.length - 2].title.slice(-1);
+    var nextFirstLetter = imageTitles[imageTitles.length - 1].title.slice(0, 1);
+    var nextLastLetter = imageTitles[imageTitles.length - 1].title.slice(-1);
+    console.log(prevLastLetter);
+    console.log(nextFirstLetter);
+    console.log(nextLastLetter);
+    if (nextLastLetter == "ん") {
+      alert("あなたの負けです");
+    } else if (prevLastLetter != nextFirstLetter) {
+      alert("あなたの負けです");
+    }
+  }
+
   $("#send-btn").click(function () {
+    var value = $('#shiritori').val();
     // form空文字リターン
-    if ($('#shiritori').val() == "") {
+    if (value == "") {
       alert("絵の名前を書いてください");
+      return false;
+      // ひらがなじゃなければリターン
+    } else if (!regexp.test(value)) {
+      alert("ひらがなで入力してください");
       return false;
     } else {
       $.ajax({
