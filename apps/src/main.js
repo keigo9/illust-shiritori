@@ -21,6 +21,8 @@ $(function () {
   let imagePictures = [];
   // ひらがな判定正規表現
   var regexp = /^[\u{3000}-\u{301C}\u{3041}-\u{3093}\u{309B}-\u{309E}]+$/mu;
+  let chars = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろ';
+  let rand_str = '';
 
   // サーバからメッセージ受信
   socket.on('send user', function (msg) {
@@ -81,18 +83,26 @@ $(function () {
   })
 
   socket.on('sendImageTitle user', function (msg) {
+    //  取得したデーターを変数に入れる
+    $.each(msg.data, function (key, value) {
+      imageTitle = value;
+    });
     // 配列にpushする
-    imageTitles.push(msg);
+    imageTitles.push(imageTitle);
     // pushした配列が毎回レンダーされるので、そのたびに空にする。
     $('#imageListTitle').empty();
     $.each(imageTitles,
       function (index, elem) {
-        // if (elem.title >= 40) { return false; }
         $('<li></li>')
-          .append(elem.imageTitle.title)
+          .append(elem.title)
           .appendTo('#imageListTitle');
       }
     );
+  });
+
+  socket.on('startString user', function (msg) {
+    rand_str = msg.rand_str;
+    document.getElementById('start-string').innerHTML = `最初の文字は: ${rand_str}`;
   });
 
   $('canvas').mousedown(function (e) {
@@ -170,7 +180,7 @@ $(function () {
     }
     // 元に戻す配列の先頭にcontextのImageDataを保持する
     undoDataStack.unshift(context.getImageData(0, 0, $('canvas').width(), $('canvas').height()));
-  }
+  };
 
   function draw(e) {
     var toX = e.pageX - $('canvas').offset().left - offset;
@@ -186,7 +196,7 @@ $(function () {
     socket.emit('server send', { fx: fromX, fy: fromY, tx: toX, ty: toY, color: context.strokeStyle, Number: context.lineWidth });
     fromX = toX;
     fromY = toY;
-  }
+  };
 
   $('#save').click(function () {
     var d = $("canvas")[0].toDataURL("image/png");
@@ -213,12 +223,14 @@ $(function () {
   function sendImageTitle(data) {
     //　入力欄をリセット
     $('form')[0].reset();
+    // サーバへ送信
+    socket.emit('sendImageTitle send', { data });
+
     //  取得したデーターを変数に入れる
     $.each(data, function (key, value) {
       imageTitle = value;
     });
-    // サーバへ送信
-    socket.emit('sendImageTitle send', { imageTitle });
+
     // 配列にpushする
     imageTitles.push(imageTitle);
 
@@ -236,18 +248,29 @@ $(function () {
   };
 
   function isShiritori(imageTitles) {
-    var prevLastLetter = imageTitles[imageTitles.length - 2].title.slice(-1);
+    // 1回目はprevの値がないので、ランダム文字列と比較
+    if (imageTitles[imageTitles.length - 2]) {
+      var prevLastLetter = imageTitles[imageTitles.length - 2].title.slice(-1);
+    } else {
+      var prevLastLetter = rand_str;
+    }
     var nextFirstLetter = imageTitles[imageTitles.length - 1].title.slice(0, 1);
     var nextLastLetter = imageTitles[imageTitles.length - 1].title.slice(-1);
-    console.log(prevLastLetter);
-    console.log(nextFirstLetter);
-    console.log(nextLastLetter);
+    // console.log(prevLastLetter);
+    // console.log(nextFirstLetter);
+    // console.log(nextLastLetter);
     if (nextLastLetter == "ん") {
       alert("あなたの負けです");
     } else if (prevLastLetter != nextFirstLetter) {
       alert("あなたの負けです");
     }
-  }
+  };
+
+  $("#get-string").click(function getRandomStringJa() {
+    rand_str = chars.charAt(Math.floor(Math.random() * chars.length));
+    document.getElementById('start-string').innerHTML = `最初の文字は: ${rand_str}`;
+    socket.emit('startString send', { rand_str });
+  });
 
   $("#send-btn").click(function () {
     var value = $('#shiritori').val();
@@ -268,7 +291,7 @@ $(function () {
         timespan: 1000
       }).done(function (data) {
         sendImageTitle(data);
-        sendImagePicture()
+        sendImagePicture();
 
         // 6. failは、通信に失敗した時に実行される
       }).fail(function (jqXHR, textStatus, errorThrown) {

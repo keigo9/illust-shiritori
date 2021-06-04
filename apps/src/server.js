@@ -59,7 +59,11 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('sendImageTitle send', function (msg) {
     socket.broadcast.emit('sendImageTitle user', msg);
-  })
+  });
+
+  socket.on('startString send', function (msg) {
+    socket.broadcast.emit('startString user', msg);
+  });
 
   socket.on('server send', function (msg) {
     socket.broadcast.emit('send user', msg);

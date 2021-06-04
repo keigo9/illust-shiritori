@@ -79,3 +79,16 @@ iframe {
   width: 30%;
   margin: 10px 10px;
 }
+
+.start-string {
+  position: relative;
+  top: 84px;
+  left: 400px;
+  display: flex;
+}
+
+.start-string p {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-right: 10px;
+}
