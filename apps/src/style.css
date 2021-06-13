@@ -14,12 +14,6 @@ canvas {
   border: 5px solid #ccc;
 }
 
-#button {
-  position: relative;
-  top: -55px;
-  left: 345px;
-}
-
 #save {
   font-size: 120%;
   width: 80px;
@@ -48,15 +42,13 @@ li {
 }
 
 .bold {
-  position: relative;
-  top: -40px;
   display: inline-block;
 }
 
 .text-form {
   position: relative;
-  top: -40px;
-  left: 20px;
+  top: -25px;
+  left: 250px;
 }
 
 #imageListTitle,
@@ -86,10 +78,8 @@ iframe {
 }
 
 .start-string {
-  position: relative;
-  top: 84px;
-  left: 400px;
   display: flex;
+  margin-top: 10px;
 }
 
 .start-string p {

@@ -143,8 +143,9 @@ $(function () {
     context.closePath();
   });
 
-  $('.color').click(function () {
-    context.strokeStyle = $(this).css('background-color');
+  $('#color').change(function () {
+    // context.strokeStyle = $(this).css('background-color');
+    context.strokeStyle = $(this).val();
   });
 
   $('#size').click(function () {
