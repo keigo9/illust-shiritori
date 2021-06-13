@@ -77,6 +77,7 @@ $(function () {
       function (index, elem) {
         $('<img>')
           .attr("src", elem)
+          .after('<span class="after">→</span>')
           .appendTo("#imageListPicture");
       }
     );
@@ -90,7 +91,17 @@ $(function () {
     // 配列にpushする
     imageTitles.push(imageTitle);
     // pushした配列が毎回レンダーされるので、そのたびに空にする。
-    $('#imageListTitle').empty();
+    // $('#imageListTitle').empty();
+    // $.each(imageTitles,
+    //   function (index, elem) {
+    //     $('<li></li>')
+    //       .append(elem.title)
+    //       .appendTo('#imageListTitle');
+    //   }
+    // );
+  });
+
+  socket.on('sendRenderImageTitle user', function () {
     $.each(imageTitles,
       function (index, elem) {
         $('<li></li>')
@@ -98,7 +109,7 @@ $(function () {
           .appendTo('#imageListTitle');
       }
     );
-  });
+  })
 
   socket.on('startString user', function (msg) {
     rand_str = msg.rand_str;
@@ -215,6 +226,7 @@ $(function () {
       function (index, elem) {
         $('<img>')
           .attr("src", elem)
+          .after('<span class="after">→</span>')
           .appendTo("#imageListPicture");
       }
     );
@@ -268,6 +280,7 @@ $(function () {
             .appendTo('#imageListTitle');
         }
       );
+      socket.emit('sendRenderImageTitle send');
     } else if (prevLastLetter != nextFirstLetter) {
       alert("あなたの負けです");
       $.each(imageTitles,
@@ -277,6 +290,7 @@ $(function () {
             .appendTo('#imageListTitle');
         }
       );
+      socket.emit('sendRenderImageTitle send');
     }
   };
 

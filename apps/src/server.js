@@ -61,6 +61,10 @@ io.sockets.on('connection', function (socket) {
     socket.broadcast.emit('sendImageTitle user', msg);
   });
 
+  socket.on('sendRenderImageTitle send', function () {
+    socket.broadcast.emit('sendRenderImageTitle user');
+  });
+
   socket.on('startString send', function (msg) {
     socket.broadcast.emit('startString user', msg);
   });

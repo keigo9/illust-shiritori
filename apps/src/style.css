@@ -75,9 +75,14 @@ iframe {
   content: '→';
 }
 
+.after {
+  position: relative;
+  top: -88px;
+}
+
 #imageListPicture img {
   width: 30%;
-  margin: 10px 10px;
+  margin: 10px 0px;
 }
 
 .start-string {
