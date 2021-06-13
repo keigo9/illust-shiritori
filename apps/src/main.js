@@ -235,14 +235,14 @@ $(function () {
     imageTitles.push(imageTitle);
 
     // pushした配列が毎回レンダーされるので、そのたびに空にする。
-    $('#imageListTitle').empty();
-    $.each(imageTitles,
-      function (index, elem) {
-        $('<li></li>')
-          .append(elem.title)
-          .appendTo('#imageListTitle');
-      }
-    );
+    // $('#imageListTitle').empty();
+    // $.each(imageTitles,
+    //   function (index, elem) {
+    //     $('<li></li>')
+    //       .append(elem.title)
+    //       .appendTo('#imageListTitle');
+    //   }
+    // );
 
     isShiritori(imageTitles);
   };
@@ -261,8 +261,22 @@ $(function () {
     // console.log(nextLastLetter);
     if (nextLastLetter == "ん") {
       alert("あなたの負けです");
+      $.each(imageTitles,
+        function (index, elem) {
+          $('<li></li>')
+            .append(elem.title)
+            .appendTo('#imageListTitle');
+        }
+      );
     } else if (prevLastLetter != nextFirstLetter) {
       alert("あなたの負けです");
+      $.each(imageTitles,
+        function (index, elem) {
+          $('<li></li>')
+            .append(elem.title)
+            .appendTo('#imageListTitle');
+        }
+      );
     }
   };
 
