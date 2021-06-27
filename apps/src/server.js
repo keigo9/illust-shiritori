@@ -2,14 +2,16 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const { randomBytes } = require('crypto');
+const port = process.env.PORT || 3000;
+app.set('port', port);
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
   cors: {
-    origin: "https://shiritori.dev/",
+    //origin: "https://shiritori.dev/",
+    origin: "https://desolate-ocean-87379.herokuapp.com/", //heorku
     methods: ["GET", "POST"]
   }
 });
-const port = 3000;
 
 app.use(express.static('src'));
 app.use(bodyParser());
@@ -59,7 +61,15 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('sendImageTitle send', function (msg) {
     socket.broadcast.emit('sendImageTitle user', msg);
-  })
+  });
+
+  socket.on('sendRenderImageTitle send', function () {
+    socket.broadcast.emit('sendRenderImageTitle user');
+  });
+
+  socket.on('startString send', function (msg) {
+    socket.broadcast.emit('startString user', msg);
+  });
 
   socket.on('server send', function (msg) {
     socket.broadcast.emit('send user', msg);

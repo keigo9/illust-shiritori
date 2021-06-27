@@ -11,30 +11,32 @@
   <div class="wrapper">
     <form action="/posts/create" method="POST" target="sendPosts">
       <canvas></canvas>
-      <ul>
-        <li style="background-color:#000" class="color"></li>
-        <li style="background-color:#f00" class="color"></li>
-        <li style="background-color:#0f0" class="color"></li>
-        <li style="background-color:#00f" class="color"></li>
-        <li style="background-color:#ff0" class="color"></li>
-        <li style="background-color:#fff" class="color"></li>
-      </ul>
+
       <div id="button">
+        <input type="color" value="#000" id="color" />
+        <div class="bold">
+          <input type="range" value="5" min="1" max="30" step="1"
+            oninput="document.getElementById('output1').value=this.value" id="size">
+
+          <output id="output1">5</output>
+        </div>
         <input type="button" id="save" value="保存" />
         <input type="button" id="clear" value="消去" />
         <input type="button" id="prev" value="戻る" />
         <input type="button" id="next" value="進む" />
       </div>
-      <div class="bold">
-        <input type="range" value="5" min="1" max="30" step="1"
-          oninput="document.getElementById('output1').value=this.value" id="size">
 
-        <output id="output1">5</output>
+      <div class='start-string'>
+        <p id='start-string'>最初の文字は:</p>
+        <input type="button" id="get-string" value="文字生成" />
       </div>
-      <input type="text" name="shiritori" class='text-form' id="shiritori">
+
+      <input type="text" name="shiritori" class='text-form' id="shiritori" x-webkit-speet>
       <input type="button" value="送信" id="send-btn" class='text-form'>
     </form>
   </div>
+
+
 
   <!-- <iframe name="sendPosts" id="shiritori-history"></iframe> -->
   <div id='imageListTitle'></div>

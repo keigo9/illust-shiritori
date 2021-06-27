@@ -14,12 +14,6 @@ canvas {
   border: 5px solid #ccc;
 }
 
-#button {
-  position: relative;
-  top: -55px;
-  left: 345px;
-}
-
 #save {
   font-size: 120%;
   width: 80px;
@@ -48,15 +42,13 @@ li {
 }
 
 .bold {
-  position: relative;
-  top: -40px;
   display: inline-block;
 }
 
 .text-form {
   position: relative;
-  top: -40px;
-  left: 20px;
+  top: -25px;
+  left: 250px;
 }
 
 #imageListTitle,
@@ -75,7 +67,23 @@ iframe {
   content: '→';
 }
 
+.after {
+  position: relative;
+  top: -88px;
+}
+
 #imageListPicture img {
   width: 30%;
-  margin: 10px 10px;
+  margin: 10px 0px;
+}
+
+.start-string {
+  display: flex;
+  margin-top: 10px;
+}
+
+.start-string p {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-right: 10px;
 }
