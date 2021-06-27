@@ -9,7 +9,7 @@ $(function () {
   var fromY;
   var drawFlag = false;
   var context = $("canvas").get(0).getContext('2d');
-  var socket = io.connect('https://shiritori.dev/');
+  var socket = io.connect('https://desolate-ocean-87379.herokuapp.com/');
   context.lineWidth = 5;
   const STACK_MAX_SIZE = 20;
   // スタックデータ保存用の配列
@@ -313,7 +313,7 @@ $(function () {
       return false;
     } else {
       $.ajax({
-        url: "https://shiritori.dev/posts/create",
+        url: "https://desolate-ocean-87379.herokuapp.com/posts/create",
         type: "POST",
         data: $('form').serialize(),
         dataType: "json",
