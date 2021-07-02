@@ -331,4 +331,11 @@ $(function () {
       })
     }
   });
+
+  $("#shiritori").keydown(function () {
+    if (event.keyCode == 13) {
+      event.preventDefault();
+      $("#send-btn").click();
+    }
+  });
 });
