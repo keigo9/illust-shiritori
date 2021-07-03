@@ -296,9 +296,13 @@ $(function () {
   };
 
   $("#get-string").click(function getRandomStringJa() {
-    rand_str = chars.charAt(Math.floor(Math.random() * chars.length));
-    document.getElementById('start-string').innerHTML = `最初の文字は: ${rand_str}`;
-    socket.emit('startString send', { rand_str });
+    if (imageTitles[0]) {
+      return false;
+    } else {
+      rand_str = chars.charAt(Math.floor(Math.random() * chars.length));
+      document.getElementById('start-string').innerHTML = `最初の文字は: ${rand_str}`;
+      socket.emit('startString send', { rand_str });
+    }
   });
 
   $("#send-btn").click(function () {
