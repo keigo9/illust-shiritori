@@ -1,3 +1,4 @@
+local development
 1: skaffold dev
 this command incloud 'docker build(npm install)' 'npm start(nodemon src/app.js)' 'kubectl apply -f'
 you can make local environment easy and quick.
@@ -19,3 +20,26 @@ It says that the site cannot be accessed due to security issues.
 to solve it , you get a certificate.
 after that you enter 'thisisunsafe' in browser.
 maybe you can access localhost!
+
+deploy to heorku
+1: change URL in main.js and serever.js to solve cors problem.
+
+2: make 'heroku.yuml' in your root project.
+to deploy docker image.
+ex: https://devcenter.heroku.com/ja/articles/build-docker-images-heroku-yml
+
+3: heroku crate
+git rmeote -v
+heroku https:~ (featch)
+heorku https:~ (push)
+is ready!
+https://devcenter.heroku.com/articles/getting-started-with-nodejs#deploy-the-app
+
+5: heroku stack:set container
+change stack to deploy docker image.
+
+https://devcenter.heroku.com/ja/articles/stack
+
+4: git add .
+git commit -m '~'
+git push heroku main
