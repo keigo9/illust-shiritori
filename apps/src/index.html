@@ -16,7 +16,7 @@
         <input type="color" value="#000" id="color" />
         <div class="bold">
           <input type="range" value="5" min="1" max="30" step="1"
-            oninput="document.getElementById('output1').value=this.value" id="size">
+            oninput="document.getElementById('output1').value=this.value" id="bold">
 
           <output id="output1">5</output>
         </div>
@@ -24,6 +24,11 @@
         <input type="button" id="clear" value="消去" />
         <input type="button" id="prev" value="戻る" />
         <input type="button" id="next" value="進む" />
+
+        <input type="radio" id="normal" name="write-mode" value="normal" checked>
+        <lable for="normal">普通</lable>
+        <input type="radio" id="dot" name="write-mode" value="dot">
+        <lable for="normal">ドット</lable>
       </div>
 
       <div class='start-string'>
