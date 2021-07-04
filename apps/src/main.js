@@ -2,6 +2,8 @@ var w = $('.wrapper').width();
 var h = $('.wrapper').height();
 $('canvas').attr('width', w);
 $('canvas').attr('height', h);
+var canvas_magnification = 15;    // ドット表示倍率
+var writeMode = "normal";
 
 $(function () {
   var offset = 5;
@@ -10,6 +12,7 @@ $(function () {
   var drawFlag = false;
   var context = $("canvas").get(0).getContext('2d');
   var socket = io.connect('https://desolate-ocean-87379.herokuapp.com/');
+  // var socket = io.connect('http://localhost:3000/');
   context.lineWidth = 5;
   const STACK_MAX_SIZE = 20;
   // スタックデータ保存用の配列
@@ -27,10 +30,15 @@ $(function () {
   // サーバからメッセージ受信
   socket.on('send user', function (msg) {
     context.strokeStyle = msg.color;
-    context.lineWidth = msg.Number;
+    context.lineWidth = msg.bold;
+    context.fillStyle = msg.color;
     // context.beginPath();
     // context.moveTo(msg.fx, msg.fy);
-    context.lineTo(msg.tx, msg.ty);
+    if (msg.writeMode === "normal") {
+      context.lineTo(msg.tx, msg.ty);
+    } else {
+      context.fillRect(msg.col * msg.dotSize, msg.row * msg.dotSize, msg.dotSize, msg.dotSize);
+    }
     context.stroke();
     // context.closePath();
   });
@@ -39,6 +47,10 @@ $(function () {
     beforeDraw();
     context.beginPath();
     context.moveTo(msg.fx, msg.fy);
+    if (msg.writeMode === "dot") {
+      context.fillStyle = msg.color;
+      context.fillRect(msg.col * msg.dotSize, msg.row * msg.dotSize, msg.dotSize, msg.dotSize);
+    }
   });
 
   socket.on('prev user', function () {
@@ -121,9 +133,14 @@ $(function () {
     beforeDraw();
     fromX = e.pageX - $(this).offset().left - offset;
     fromY = e.pageY - $(this).offset().top - offset;
+    var col = Math.floor(fromX / canvas_magnification); //dot
+    var row = Math.floor(fromY / canvas_magnification); //dot
     context.beginPath();
     context.moveTo(fromX, fromY);
-    socket.emit('mousedown send', { fx: fromX, fy: fromY });
+    if (writeMode === "dot") {
+      context.fillRect(col * canvas_magnification, row * canvas_magnification, canvas_magnification, canvas_magnification); //dot
+    }
+    socket.emit('mousedown send', { fx: fromX, fy: fromY, writeMode: writeMode, dotSize: canvas_magnification, col: col, row: row, color: color });
     return false;  // for chrome
   });
 
@@ -145,11 +162,15 @@ $(function () {
 
   $('#color').change(function () {
     // context.strokeStyle = $(this).css('background-color');
-    context.strokeStyle = $(this).val();
+    color = $(this).val();
+    context.strokeStyle = color;
+    context.fillStyle = color;
   });
 
-  $('#size').click(function () {
-    context.lineWidth = Number($(this).val());
+  $('#bold').click(function () {
+    bold = Number($(this).val());
+    context.lineWidth = bold;
+    canvas_magnification = bold;
   });
 
   $('#prev').click(function () {
@@ -197,15 +218,20 @@ $(function () {
   function draw(e) {
     var toX = e.pageX - $('canvas').offset().left - offset;
     var toY = e.pageY - $('canvas').offset().top - offset;
+    var col = Math.floor(toX / canvas_magnification);
+    var row = Math.floor(toY / canvas_magnification);
     // context.lineWidth = 5;
     // context.beginPath();
     // context.moveTo(fromX, fromY);
-    context.lineTo(toX, toY);
+    if (writeMode === "normal") {
+      context.lineTo(toX, toY);
+    } else {
+      context.fillRect(col * canvas_magnification, row * canvas_magnification, canvas_magnification, canvas_magnification);
+    }
     context.stroke();
     // context.closePath();
-
     // サーバへメッセージ送信
-    socket.emit('server send', { fx: fromX, fy: fromY, tx: toX, ty: toY, color: context.strokeStyle, Number: context.lineWidth });
+    socket.emit('server send', { fx: fromX, fy: fromY, tx: toX, ty: toY, color: color, bold: bold, writeMode: writeMode, dotSize: canvas_magnification, col: col, row: row });
     fromX = toX;
     fromY = toY;
   };
@@ -214,6 +240,10 @@ $(function () {
     var d = $("canvas")[0].toDataURL("image/png");
     d = d.replace("image/png", "image/octet-stream");
     window.open(d, "save");
+  });
+
+  $('[name=write-mode]').click(function () {
+    writeMode = $('input[name=write-mode]:checked').val();
   });
 
   function sendImagePicture() {
