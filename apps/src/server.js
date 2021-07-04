@@ -7,8 +7,8 @@ app.set('port', port);
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
   cors: {
-    origin: "http://localhost:3000/",
-    // origin: "https://desolate-ocean-87379.herokuapp.com/", //heorku
+    // origin: "http://localhost:3000/",
+    origin: "https://desolate-ocean-87379.herokuapp.com/", //heorku
     methods: ["GET", "POST"]
   }
 });
