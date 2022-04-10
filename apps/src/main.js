@@ -144,7 +144,29 @@ $(function () {
     return false;  // for chrome
   });
 
+  document.addEventListener("touchmove", function (e) {
+    drawFlag = true;
+    beforeDraw();
+    fromX = e.pageX - $(this).offset().left - offset;
+    fromY = e.pageY - $(this).offset().top - offset;
+    var col = Math.floor(fromX / canvas_magnification); //dot
+    var row = Math.floor(fromY / canvas_magnification); //dot
+    context.beginPath();
+    context.moveTo(fromX, fromY);
+    if (writeMode === "dot") {
+      context.fillRect(col * canvas_magnification, row * canvas_magnification, canvas_magnification, canvas_magnification); //dot
+    }
+    socket.emit('mousedown send', { fx: fromX, fy: fromY, writeMode: writeMode, dotSize: canvas_magnification, col: col, row: row, color: color });
+    return false;  // for chrome
+  });
+
   $('canvas').mousemove(function (e) {
+    if (drawFlag) {
+      draw(e);
+    }
+  });
+
+  document.addEventListener("touchmove", function (e) {
     if (drawFlag) {
       draw(e);
     }
@@ -153,6 +175,12 @@ $(function () {
   $('canvas').on('mouseup', function () {
     drawFlag = false;
     context.closePath();
+  });
+
+  document.addEventListener("touchend", function (e) {
+    if (drawFlag) {
+      draw(e);
+    }
   });
 
   $('canvas').on('mouseleave', function () {
