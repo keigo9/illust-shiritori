@@ -1,3 +1,4 @@
+console.log("hjello")
 var w = $('.wrapper').width();
 var h = $('.wrapper').height();
 $('canvas').attr('width', w);
@@ -11,8 +12,10 @@ $(function () {
   var fromY;
   var drawFlag = false;
   var context = $("canvas").get(0).getContext('2d');
-  var socket = io.connect('https://desolate-ocean-87379.herokuapp.com/');
+  var socketURL = 'https://illust-shiritori.vercel.app/'
+  //var socket = io.connect('https://desolate-ocean-87379.herokuapp.com/');
   // var socket = io.connect('http://localhost:3000/');
+  var socket = io.connect(socketURL);
   context.lineWidth = 5;
   const STACK_MAX_SIZE = 20;
   // スタックデータ保存用の配列
@@ -375,7 +378,7 @@ $(function () {
       return false;
     } else {
       $.ajax({
-        url: "https://desolate-ocean-87379.herokuapp.com/posts/create",
+        url: `${socketURL}posts/create`,
         type: "POST",
         data: $('form').serialize(),
         dataType: "json",
